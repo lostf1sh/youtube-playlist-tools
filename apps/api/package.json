@@ -9,13 +9,14 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@fastify/aws-lambda": "6.4.0",
     "@fastify/cors": "^11.1.0",
     "@ypt/shared": "workspace:*",
     "fastify": "^5.6.0"
   },
   "devDependencies": {
+    "@netlify/functions": "5.1.2",
     "@types/node": "^24.3.0",
-    "@vercel/node": "5.6.10",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   }
