@@ -1,0 +1,19 @@
+{
+  "name": "youtube-playlist-tools",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"bun run --cwd apps/api dev\" \"bun run --cwd apps/web dev\"",
+    "build": "bun run --cwd packages/shared build && bun run --cwd apps/api build && bun run --cwd apps/web build",
+    "test": "bun run --cwd packages/shared test && bun run --cwd apps/api test && bun run --cwd apps/web test",
+    "test:e2e": "bun run --cwd apps/web test:e2e"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3"
+  }
+}
