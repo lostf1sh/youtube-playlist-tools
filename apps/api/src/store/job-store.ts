@@ -48,7 +48,7 @@ export class JobStore {
   public getJob(jobId: string): ExtractionJob {
     const job = this.jobs.get(jobId);
     if (!job) {
-      throw new NotFoundError('Job bulunamadı veya süresi doldu.');
+      throw new NotFoundError('Job not found or expired.');
     }
 
     return job;

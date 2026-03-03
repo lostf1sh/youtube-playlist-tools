@@ -38,7 +38,7 @@ const handleError = (reply: FastifyReply, error: unknown): FastifyReply => {
     return reply.status(statusCode).send({ message: error.message });
   }
 
-  return reply.status(500).send({ message: 'Beklenmeyen sunucu hatası.' });
+  return reply.status(500).send({ message: 'Unexpected server error.' });
 };
 
 export const registerExtractionRoutes = (app: FastifyInstance, args: RegisterArgs): void => {
@@ -47,25 +47,25 @@ export const registerExtractionRoutes = (app: FastifyInstance, args: RegisterArg
       const { playlistUrl, mode, largePlaylistChoice } = request.body;
 
       if (!playlistUrl || typeof playlistUrl !== 'string') {
-        throw new BadRequestError('playlistUrl zorunludur.');
+        throw new BadRequestError('playlistUrl is required.');
       }
 
       if (!validModes.has(mode)) {
-        throw new BadRequestError('mode değeri realtime veya paginated olmalıdır.');
+        throw new BadRequestError('mode must be realtime or paginated.');
       }
 
       const playlistId = parsePlaylistId(playlistUrl);
       if (!playlistId) {
-        throw new BadRequestError('Geçerli bir YouTube playlist URL girin.');
+        throw new BadRequestError('Please enter a valid YouTube playlist URL.');
       }
 
       if (largePlaylistChoice && !isLargeChoice(largePlaylistChoice)) {
-        throw new BadRequestError('largePlaylistChoice geçersiz.');
+        throw new BadRequestError('Invalid largePlaylistChoice value.');
       }
 
       const playlistMeta = await args.youtubeClient.getPlaylistMetadata(playlistId);
       if (playlistMeta.itemCount > 1000 && !largePlaylistChoice) {
-        throw new ConflictError('Büyük playlist için seçim gerekli.', {
+        throw new ConflictError('Large playlist choice required.', {
           code: 'LARGE_PLAYLIST_CHOICE_REQUIRED',
           itemCount: playlistMeta.itemCount,
           options: ['first500', 'first1000', 'all']

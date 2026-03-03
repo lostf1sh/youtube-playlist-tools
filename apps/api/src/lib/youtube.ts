@@ -45,15 +45,15 @@ const makeRequest = async <T>(
     const message = body.error?.message ?? 'Unknown YouTube API error';
 
     if (response.status === 403 && message.toLowerCase().includes('private')) {
-      throw new UnauthorizedResourceError('Private playlist bu sürümde desteklenmiyor.');
+      throw new UnauthorizedResourceError('Private playlists are not supported in this version.');
     }
 
     if (response.status === 404) {
-      throw new UpstreamError('Playlist bulunamadı.', 404);
+      throw new UpstreamError('Playlist not found.', 404);
     }
 
     if (response.status === 429 || response.status >= 500) {
-      lastError = new UpstreamError(`YouTube API geçici hata: ${message}`, 502);
+      lastError = new UpstreamError(`YouTube API temporary error: ${message}`, 502);
       if (attempt < maxRetries) {
         const backoffMs = 300 * 2 ** attempt;
         await sleep(backoffMs);
@@ -62,15 +62,15 @@ const makeRequest = async <T>(
       }
     }
 
-    throw new UpstreamError(`YouTube API hatası: ${message}`, response.status);
+    throw new UpstreamError(`YouTube API error: ${message}`, response.status);
   }
 
-  throw lastError ?? new UpstreamError('YouTube API isteği başarısız.');
+  throw lastError ?? new UpstreamError('YouTube API request failed.');
 };
 
 export const buildYouTubeClient = ({ apiKey, maxRetries = 3 }: BuildYouTubeClientArgs): YouTubeClient => {
   if (!apiKey) {
-    throw new UpstreamError('YOUTUBE_API_KEY eksik.', 500);
+    throw new UpstreamError('YOUTUBE_API_KEY is missing.', 500);
   }
 
   return {
@@ -89,7 +89,7 @@ export const buildYouTubeClient = ({ apiKey, maxRetries = 3 }: BuildYouTubeClien
 
       const item = response.items?.[0];
       if (!item) {
-        throw new UpstreamError('Playlist bulunamadı veya erişilemiyor.', 404);
+        throw new UpstreamError('Playlist not found or not accessible.', 404);
       }
 
       return {

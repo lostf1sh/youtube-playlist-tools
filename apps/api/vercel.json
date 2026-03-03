@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "installCommand": "cd ../.. && bun install",
+    "buildCommand": "echo 'no build needed'",
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/api"
+        }
+    ]
+}
